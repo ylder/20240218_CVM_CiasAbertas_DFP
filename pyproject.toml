@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "20240218-cvm-ciasabertas-dfp"
+version = "0.1.0"
+description = "Coleta de dados da CVM, referente as DFPs das Cias Abertas."
+authors = ["ylder <yldebran.santana@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pipdeptree = "^2.14.0"
+pip-autoremove = "^0.10.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
