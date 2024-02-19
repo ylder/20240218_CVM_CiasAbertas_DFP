@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.11"
 pipdeptree = "^2.14.0"
 pip-autoremove = "^0.10.0"
+requests = "^2.31.0"
+pydantic = "^2.6.1"
 
 
 [build-system]
