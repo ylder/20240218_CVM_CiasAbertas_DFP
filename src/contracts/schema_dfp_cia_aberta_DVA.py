@@ -19,7 +19,7 @@ class base_model(BaseModel):
     VL_CONTA: float
 
 # Dicionário para correção de tipos de dados na leitura
-dtype_correction = {
+data_types = {
     "CD_CONTA": str,
     "CD_CVM": str,
     "CNPJ_CIA": str,

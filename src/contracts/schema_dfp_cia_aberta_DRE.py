@@ -19,7 +19,7 @@ class base_model(BaseModel):
     VERSAO: int
     VL_CONTA: float
 
-dtype_correction = {
+data_types = {
     "CD_CONTA": str,
     "CD_CVM": str,
     "CNPJ_CIA": str,

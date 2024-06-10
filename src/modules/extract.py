@@ -12,7 +12,7 @@ from requests import get
 from requests.exceptions import HTTPError
 
 
-class Extrator():
+class Extractor():
 
     def __init__(
         self,
@@ -25,7 +25,7 @@ class Extrator():
         self.max_failures = max_failures
         self.start_year = start_year
         self.end_year = end_year
-        self.extract_dir = join(getcwd(), 'data')
+        self.extract_dir = join(getcwd(), 'data', 'dfp_data_files')
         self.temp_dir = join(getcwd(), 'temp')
 
         makedirs(self.extract_dir, exist_ok=True)
@@ -76,5 +76,5 @@ class Extrator():
 
 
 if __name__ == '__main__':
-    inst = Extrator(retry_codes=None, max_failures=3, start_year=2015, end_year=2015)
+    inst = Extractor(retry_codes=None, max_failures=3, start_year=2015, end_year=2015)
     inst.extract()
