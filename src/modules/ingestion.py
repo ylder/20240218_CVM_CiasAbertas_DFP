@@ -1,93 +1,92 @@
 from os import getcwd
 from os.path import isfile, join
 
+import pandas as pd
 from duckdb import CatalogException, connect
-from pandas import DataFrame, read_csv
 
 from src.modules.data_quality import ContractComplianceValidation
 
 
 class Ingestion:
-    def __init__(self, database, data_insert_path, full_load=False):
+    def __init__(self, database, full_load=False):
         self.conn = connect(database)
-        self.data_insert_path = data_insert_path
         self.archive = join(getcwd(), 'data', 'ingested_file_history.csv')
-        self.table = self.table_name()
         self.full_load = full_load
-        self.file_already_ingested = False
 
         if not isfile(self.archive):
-            DataFrame({'nomes': ()}).to_csv(self.archive, index=False)
-
-        if self._check_file_ingested():
-            self.file_already_ingested = True
+            pd.DataFrame({'nomes': []}).to_csv(self.archive, index=False)
 
         if self.full_load:
-            self._delete_files_from_history()
-            self._delete_data_from_table()
+            self._reset_history()
+            self._reset_database()
 
+    def _reset_history(self):
+        pd.DataFrame({'nomes': []}).to_csv(self.archive, index=False)
 
-    def _check_file_ingested(self):
-        names = read_csv(self.archive)['nomes'].to_list()
+    def _reset_database(self):
+        tables = self.conn.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'").fetchall()
 
-        if self.data_insert_path in names:
-            print(f"File already ingested. File: {self.data_insert_path}")
+        for table in tables:
+            table_name = table[0]
+            drop_query = f"DROP TABLE IF EXISTS {table_name}"
+            self.conn.execute(drop_query)
+            print(f"Table {table_name} deleted.")
+
+        print("All tables have been excluded.")
+
+    def _check_file_ingested(self, file_path):
+        ingested_files = pd.read_csv(self.archive)['nomes'].tolist()
+        if file_path in ingested_files:
+            print(f"File already ingested: {file_path}")
             return True
-
         return False
 
-    def _delete_files_from_history(self):
-        DataFrame({'nomes': ()}).to_csv(self.archive, index=False)
-
-    def table_name(self):
-        dfp_document = [
+    def _get_table_name(self, file_path):
+        dfp_documents = [
             'dfp_cia_aberta_20', '_BPA', '_BPP', '_DFC_MD',
             '_DFC_MI', '_DMPL', '_DRA', '_DRE', '_DVA', '_parecer'
         ]
 
-        for doc in dfp_document:
-            if doc in self.data_insert_path:
+        for doc in dfp_documents:
+            if doc in file_path:
                 if doc.startswith('_', 0):
                     return doc[1:].upper()
                 return doc[:-3].upper()
 
-    def table_exists(self):
+    def _table_exists(self, table_name):
         try:
-            self.conn.execute(f"SELECT 1 FROM {self.table} LIMIT 1")
+            self.conn.execute(f"SELECT 1 FROM {table_name} LIMIT 1")
             return True
         except CatalogException:
             return False
 
-    def _delete_data_from_table(self):
-        if self.table_exists():
-            self.conn.execute(f'DELETE FROM {self.table}')
-
-    def _insert_data(self):
-        if self.file_already_ingested:
+    def insert_data(self, file_path):
+        if self._check_file_ingested(file_path):
             return
 
-        data = ContractComplianceValidation(self.data_insert_path).data()
-        data = self.conn.from_df(data)
+        validated = ContractComplianceValidation(file_path)
+        data = self.conn.from_df(validated.get_validated_data())
 
-        if not self.table_exists():
-            data.create(self.table)
+        table_name = self._get_table_name(file_path)
+        if not table_name:
+            raise ValueError(f"Unable to determine table name for file: {file_path}")
+
+        if not self._table_exists(table_name):
+            data.create(table_name)
         else:
-            data.insert_into(self.table)
+            data.insert_into(table_name)
 
-        print(f'File inserted: {self.data_insert_path}.')
+        print(f"File inserted: {file_path}")
 
-        with open(self.archive, 'a', encoding='utf-8') as file_history:
-            file_history.write(self.data_insert_path + '\n')
+        with open(self.archive, 'a', encoding='utf-8') as history_file:
+            history_file.write(f"{file_path}\n")
             print("Added to history.")
 
     def _close_connection(self):
         self.conn.close()
 
-    def run(self):
-        self._insert_data()
-        self._close_connection()
-
 if __name__ == "__main__":
-
-    dir = r'C:\portfolio-projects\20240218_CVM_CiasAbertas_DFP\data\dfp_data_files\dfp_cia_aberta_BPA_con_2015.csv'
-    Ingestion('teste.db', dir).run()
+    file_path = r'C:\portfolio-projects\20240218_CVM_CiasAbertas_DFP\data\dfp_data_files\dfp_cia_aberta_BPA_con_2015.csv'
+    ingestion_instance = Ingestion('teste.db', full_load=True)
+    ingestion_instance.insert_data(file_path)
+    ingestion_instance._close_connection()
