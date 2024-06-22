@@ -7,10 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pipdeptree = "^2.14.0"
-pip-autoremove = "^0.10.0"
+pipdeptree = "^2.16.2"
 requests = "^2.31.0"
-pydantic = "^2.6.1"
+pydantic = "^2.6.4"
+pandas = "^2.2.1"
+numpy = "1.26.4"
+duckdb = "^0.10.1"
 
 
 [build-system]
