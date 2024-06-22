@@ -9,6 +9,7 @@ relatórios contábeis das empresas de capital aberto listadas na bolsa de
 valores brasileira, armazenando-os em um database duckdb.
 
 Link oficial: https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp.
+
 Link dos dicionários de dados oficiais: https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp/resource/cbf44db1-06b8-45f7-8318-88d1564e9451.
 
 ## 2 Ferramentas e técnicas utilizadas
