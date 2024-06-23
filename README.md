@@ -8,9 +8,8 @@ Comissão de Valores Mobiliários (CVM). Este programa processa todos os
 relatórios contábeis das empresas de capital aberto listadas na bolsa de
 valores brasileira, armazenando-os em um database duckdb.
 
-Link oficial: https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp.
-
-Link dos dicionários de dados oficiais: https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp/resource/cbf44db1-06b8-45f7-8318-88d1564e9451.
+- [Página oficial da CVM com as DFPs](https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp).
+- [Link dos dicionários de dados oficiais das DFPs](https://dados.cvm.gov.br/dataset/cia_aberta-doc-dfp/resource/cbf44db1-06b8-45f7-8318-88d1564e9451)
 
 ## 2 Ferramentas e técnicas utilizadas
 
@@ -60,3 +59,30 @@ dos dados através do módulo `extract.py`.
 - Coleta os arquivos de dados extraídos e os insere no banco de dados utilizando
 o módulo `ingestion.py`.
 - Garante o fechamento da conexão com o banco de dados após a conclusão do processo.
+
+## 5 Instalação do projeto
+
+Para instalar e configurar o projeto, siga as etapas abaixo:
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/cvm-financial-data-processor.git
+   cd cvm-financial-data-processor
+
+2. No repositório, crie um ambiente virtual e instale as dependências
+```
+python -m venv venv # Para criar ambiente virtual python
+source venv/bin/activate  # Para ativar ambiente virtual no Linux/macOS
+venv\Scripts\activate  # Para ativar ambiente virtual no Windows
+pip install -r requirements.txt # Para instalar bibliotecas necessárias para funcionamento do projeto
+```
+
+3. Uso
+
+Para executar o projeto, rode o arquivo main.py.
+Antes, defina o tipo de carga: total ou incremental.
+
+
+
+
+
