@@ -60,6 +60,13 @@ dos dados através do módulo `extract.py`.
 o módulo `ingestion.py`.
 - Garante o fechamento da conexão com o banco de dados após a conclusão do processo.
 
+
+Adiante, vídeo demonstrativo do funcionamento do projeto:
+
+<a href="https://youtu.be/UrYSJXiiXwQ?si=ws1UgXbkh5iyF4K7" target="_blank">
+    <img src="https://github.com/ylder/20240218_CVM_CiasAbertas_DFP/assets/126031404/81c4abb1-e411-4994-9d24-6bedb02d8851" alt="Assista ao vídeo no YouTube" width="400"/>
+</a>
+
 ## 5 Instalação do projeto
 
 Para instalar e configurar o projeto, siga as etapas abaixo:
